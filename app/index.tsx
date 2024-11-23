@@ -5,7 +5,9 @@ import {router} from "expo-router";
 export default function HomeScreen() {
     return (
 
-        <Button title="Back to Login" onPress={() => router.push("/Auth/LoginScreen")} />
+        <><Button title="Back to Login" onPress={() => router.push("/Auth/LoginScreen")}/>
+            <Button title="home" onPress={() => router.push("/Home/HomeScreen")}/>
+        </>
 
     )}
 

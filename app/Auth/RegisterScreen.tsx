@@ -10,8 +10,7 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     try {
-        console.log("!23414");
-      const response = await fetch('https://127.0.0.1:8000/api/users ', {
+      const response = await fetch('https://storingspunt-d02668d953a7.herokuapp.com/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,6 +20,7 @@ export default function RegisterScreen() {
       const data = await response.json();
       console.log(data)
       if (data) {
+          alert('Sucsess! /redirect')
         router.push("/Auth/LoginScreen");
       } else {
         alert('Registration failed');
