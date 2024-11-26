@@ -15,7 +15,7 @@ const commonStyles = StyleSheet.create({
         marginBottom: 24,
     },
     input: {
-        width: '80%',
+        width: '90%', // Use percentage for responsive width
         height: 50,
         backgroundColor: '#333333',
         color: '#FFFFFF',
@@ -27,7 +27,7 @@ const commonStyles = StyleSheet.create({
         borderWidth: 1,
     },
     button: {
-        width: '80%',
+        width: '90%', // Use percentage for responsive width
         backgroundColor: '#FF6F61',
         paddingVertical: 12,
         borderRadius: 8,
@@ -40,14 +40,26 @@ const commonStyles = StyleSheet.create({
         fontWeight: 'bold',
     },
     secondaryButton: {
+        width: '90%', // Use percentage for responsive width
         backgroundColor: 'transparent',
         borderWidth: 1,
         borderColor: '#FF6F61',
+        borderRadius: 8,
+        alignItems: 'center',
+        marginVertical: 8,
     },
     secondaryButtonText: {
         color: '#FF6F61',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    imagePreview: {
+        width: '90%', // Use percentage for responsive width
+        height: 200,
+        borderRadius: 8,
+        marginTop: 16,
+        borderWidth: 1,
+        borderColor: '#CCCCCC',
     },
 });
 

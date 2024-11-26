@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import commonStyles from '../../assets/Css/AuthCSS';
+import commonStyles from '../../assets/Css/CommonCSS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
     const router = useRouter();
 
-    // Token opslaan in AsyncStorage
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
     const saveToken = async (key: string, token: string) => {
         try {
             await AsyncStorage.setItem(key, token);
@@ -19,9 +24,15 @@ export default function LoginScreen() {
     };
 
     const handleLogin = async () => {
+        if (!validateEmail(email)) {
+            setEmailError('Please enter a valid email address');
+            return;
+        } else {
+            setEmailError('');
+        }
+
         try {
             console.log(JSON.stringify({ email, password }));
-            // Zorg ervoor dat het juiste API-endpoint wordt gebruikt.
             const response = await fetch('https://storingspunt-d02668d953a7.herokuapp.com/auth', {
                 method: 'POST',
                 headers: {
@@ -29,24 +40,32 @@ export default function LoginScreen() {
                 },
                 body: JSON.stringify({ email, password }),
             });
-            console.log("response", response);
+
             if (!response.ok) {
-                throw new Error('Login mislukt: ongeldige credentials');
+                if (response.status === 401) {
+                    throw new Error('Login failed: Invalid credentials');
+                } else if (response.status === 500) {
+                    throw new Error('Login failed: Server error');
+                } else {
+                    throw new Error(`Login failed: ${response.statusText}`);
+                }
             }
 
             const data = await response.json();
-            console.log(response);
             if (data.token) {
-                await saveToken('authToken', data.token); // Token opslaan
-                alert('Sucsess! /redirect')
-                router.push('../Home/HomeScreen'); // Navigeren naar de volgende pagina
+                await saveToken('authToken', data.token);
+                alert('Success! Redirecting...');
+                router.push('../Home/HomeScreen');
             } else {
-                Alert.alert('Login mislukt', 'Controleer je e-mail en wachtwoord');
+                Alert.alert('Login failed', 'Please check your email and password');
             }
-            console.log(response);
         } catch (error) {
-            console.log('Fout bij het inloggen:', error);
-            Alert.alert('Fout', 'Er ging iets mis bij het inloggen.');
+            console.error('Error during login:', error);
+            if (error instanceof Error && error.message.includes('Network request failed')) {
+                Alert.alert('Error', 'Network error. Please try again later.');
+            } else if (error instanceof Error) {
+                Alert.alert('Error', error.message);
+            }
         }
     };
 
@@ -62,6 +81,7 @@ export default function LoginScreen() {
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
+            {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
             <TextInput
                 style={styles.input}
                 placeholder="Password"
@@ -85,4 +105,8 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
     ...commonStyles,
+    errorText: {
+        color: 'red',
+        marginBottom: 10,
+    },
 });

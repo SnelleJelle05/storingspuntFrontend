@@ -1,27 +1,27 @@
-import React from 'react';
-import {StyleSheet, Button} from 'react-native';
-import {router} from "expo-router";
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { router } from "expo-router";
 
 export default function HomeScreen() {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            router.push("/Auth/LoginScreen");
+        }, 50); // 2-second delay
+
+        return () => clearTimeout(timer); // Cleanup the timer on unmount
+    }, []);
+
     return (
-
-        <><Button title="Back to Login" onPress={() => router.push("/Auth/LoginScreen")}/>
-            <Button title="home" onPress={() => router.push("/Home/HomeScreen")}/>
-        </>
-
-    )}
+        <View style={styles.container}>
+        </View>
+    );
+}
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FF6F61', // Fallback background color
-    },
-    title: {
-        fontSize: 24,
-        color: '#FFFFFF', // Ensure text contrast
-        fontWeight: 'bold',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Semi-transparent background for contrast
     },
 });
-
