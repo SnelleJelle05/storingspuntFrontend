@@ -92,12 +92,14 @@ export default function AddDefect() {
                     >
                         <Text style={[styles.categoryButtonText, category === cat && styles.selectedCategoryButtonText]}>
                             {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        {/*    uppercase first letter*/}
                         </Text>
                     </TouchableOpacity>
                 ))}
             </View>
             {image && (
                 <Image
+                    //preview image
                     source={{ uri: image }}
                     style={styles.imagePreview}
                 />

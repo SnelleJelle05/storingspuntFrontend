@@ -5,10 +5,10 @@ import { router } from "expo-router";
 export default function HomeScreen() {
     useEffect(() => {
         const timer = setTimeout(() => {
-            router.push("/Auth/LoginScreen");
+            // router.push("/Auth/LoginScreen");
         }, 50); // 2-second delay
 
-        return () => clearTimeout(timer); // Cleanup the timer on unmount
+        return () => clearTimeout(timer);
     }, []);
 
     return (

@@ -1,29 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {View, ScrollView, Text, StyleSheet, FlatList, Image, Alert, TouchableOpacity} from 'react-native';
 import {router} from "expo-router";
+import handleDeleteDefect from "./Crud/DeleteDefect";
+import FetchDefect from "./Crud/FetchDefect";
 
 export default function DefectsScreen() {
-    const [defects, setDefects] = useState([]);
 
-    useEffect(() => {
-        const fetchDefects = async () => {
-            try {
-                const response = await fetch('https://storingspunt-d02668d953a7.herokuapp.com/api/defects');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch defects');
-                }
-
-                const data = await response.json();
-                setDefects(data.member);
-            } catch (error) {
-                console.error('Error fetching defects:', error);
-                Alert.alert('Error', 'Failed to fetch defects from the server.');
-            }
-        };
-
-        fetchDefects();
-    }, []);
-    console.log(defects[0]);
+    const {defects} = FetchDefect();
+    // @ts-ignore
+    const defectsArray = defects['member']; // Extract the data from the object
 
     // @ts-ignore
     const renderItem = ({item}) => {
@@ -41,6 +26,31 @@ export default function DefectsScreen() {
                 ) : (
                     <Text style={styles.noImageText}>No Image Available</Text>
                 )}
+                <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() =>
+                        router.push({
+                            pathname: "/Defects/EditDefect",
+                            params: { defect: JSON.stringify(item) } // Serialize the defect object
+                        })
+                    }                >
+                    <Text style={styles.editButtonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() =>
+                        Alert.alert(
+                            "Confirm Delete",
+                            "Are you sure you want to delete this defect?",
+                            [
+                                {text: "Cancel", style: "cancel"},
+                                {text: "Delete", onPress: () => handleDeleteDefect(item.id)}
+                            ]
+                        )
+                    }
+                >
+                    <Text style={styles.deleteButtonText}>Delete</Text>
+                </TouchableOpacity>
             </View>
         );
     };
@@ -52,7 +62,7 @@ export default function DefectsScreen() {
             </TouchableOpacity>
 
             <FlatList
-                data={defects}
+                data={defectsArray}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
             />
@@ -63,7 +73,7 @@ export default function DefectsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 16, // Reduced padding for better mobile layout
+        paddingHorizontal: 16,
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
     },
     item: {
@@ -99,8 +109,8 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     image: {
-        width: '100%', // Responsive width to fit container
-        height: 200, // Fixed height for consistency
+        width: '100%',
+        height: 200,
         marginTop: 8,
         borderRadius: 8,
         borderColor: '#555555',
@@ -124,6 +134,30 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#FFFFFF',
         fontSize: 16,
+        fontWeight: 'bold',
+    },
+    editButton: {
+        backgroundColor: '#007BFF',
+        paddingVertical: 8,
+        borderRadius: 8,
+        marginTop: 8,
+        alignItems: 'center',
+    },
+    editButtonText: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    deleteButton: {
+        backgroundColor: '#FF4136',
+        paddingVertical: 8,
+        borderRadius: 8,
+        marginTop: 8,
+        alignItems: 'center',
+    },
+    deleteButtonText: {
+        color: '#FFFFFF',
+        fontSize: 14,
         fontWeight: 'bold',
     },
 });

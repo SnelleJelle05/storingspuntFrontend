@@ -10,6 +10,7 @@ export default function LoginScreen() {
     const [emailError, setEmailError] = useState('');
     const router = useRouter();
 
+    // some validation
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
@@ -32,6 +33,7 @@ export default function LoginScreen() {
         }
 
         try {
+            //  api call for authentication
             console.log(JSON.stringify({ email, password }));
             const response = await fetch('https://storingspunt-d02668d953a7.herokuapp.com/auth', {
                 method: 'POST',
@@ -42,6 +44,7 @@ export default function LoginScreen() {
             });
 
             if (!response.ok) {
+                //  error handling
                 if (response.status === 401) {
                     throw new Error('Login failed: Invalid credentials');
                 } else if (response.status === 500) {
