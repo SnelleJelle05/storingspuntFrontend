@@ -6,6 +6,7 @@ export default function HomeScreen() {
     useEffect(() => {
         const timer = setTimeout(() => {
             // router.push("/Auth/LoginScreen");
+            router.push("/Home/HomeScreen");
         }, 50); // 2-second delay
 
         return () => clearTimeout(timer);

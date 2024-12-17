@@ -31,9 +31,9 @@ export default function DefectsScreen() {
                     onPress={() =>
                         router.push({
                             pathname: "/Defects/EditDefect",
-                            params: { defect: JSON.stringify(item) } // Serialize the defect object
+                            params: {defect: JSON.stringify(item)} // Serialize the defect object
                         })
-                    }                >
+                    }>
                     <Text style={styles.editButtonText}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -55,6 +55,7 @@ export default function DefectsScreen() {
         );
     };
 
+    // @ts-ignore
     return (
         <ScrollView style={styles.container}>
             <TouchableOpacity style={styles.button} onPress={() => router.push("/Defects/AddDefect")}>
@@ -65,6 +66,7 @@ export default function DefectsScreen() {
                 data={defectsArray}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
+                nestedScrollEnabled={true}
             />
         </ScrollView>
     );
@@ -160,4 +162,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
     },
-});
+})
