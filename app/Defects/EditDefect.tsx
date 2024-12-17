@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { router } from "expo-router";
-import { patchDefect } from '../Home/Crud/PatchDefect';
-import { useRoute } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {router} from "expo-router";
+import {patchDefect} from '../Home/Crud/PatchDefect';
+import {handleDeleteDefect} from '../Home/Crud/DeleteDefect';
+import {useRoute} from '@react-navigation/native';
 
 // @ts-ignore
 export default function EditDefect() {
     const route = useRoute();
     // @ts-ignore
-    const { defect } = route.params; // Extract the defect object from the route params
+    const {defect} = route.params; // Extract the defect object from the route params
     const defectObj = JSON.parse(defect); // Deserialize the defect object from the route params
 
     const [title, setTitle] = useState(defectObj.title);
@@ -18,8 +19,7 @@ export default function EditDefect() {
 
     // Refactor handleSave to be synchronous within the UI
     const handleSave = () => {
-        const updateData = { title, description, location, category };
-        console.log(defectObj.id, updateData);
+        const updateData = {title, description, location, category};
         (async () => {
             const success = await patchDefect(defectObj.id, updateData);
             if (success) {
@@ -27,6 +27,16 @@ export default function EditDefect() {
                 router.push('/Home/HomeScreen'); // Navigate back to the previous screen
             }
         })();
+    };
+
+    const handleDelete = async () => {
+        const success = await handleDeleteDefect(defectObj.id);
+        if (success) {
+            Alert.alert('Success', 'Defect deleted successfully.');
+            router.push('/Home/HomeScreen'); // Navigate back to the previous screen
+        } else {
+            Alert.alert('Error', 'Failed to delete defect.');
+        }
     };
 
     const categories = ['algemeen', 'Hardware', 'Software', 'Systeem'];
@@ -60,7 +70,8 @@ export default function EditDefect() {
                         style={[styles.categoryButton, category === cat && styles.selectedCategoryButton]}
                         onPress={() => setCategory(cat)}
                     >
-                        <Text style={[styles.categoryButtonText, category === cat && styles.selectedCategoryButtonText]}>
+                        <Text
+                            style={[styles.categoryButtonText, category === cat && styles.selectedCategoryButtonText]}>
                             {cat.charAt(0).toUpperCase() + cat.slice(1)}
                             {/*    uppercase first letter*/}
                         </Text>
@@ -69,6 +80,12 @@ export default function EditDefect() {
             </View>
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => handleDelete()}>
+                <Text style={styles.deleteButtonText}>Delete</Text>
             </TouchableOpacity>
         </View>
     );
@@ -127,5 +144,17 @@ const styles = StyleSheet.create({
     },
     selectedCategoryButtonText: {
         color: '#FFFFFF',
+    },
+    deleteButton: {
+        backgroundColor: '#007BFF',
+        paddingVertical: 8,
+        borderRadius: 8,
+        marginTop: 8,
+        alignItems: 'center',
+    },
+    deleteButtonText: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        fontWeight: 'bold',
     },
 });

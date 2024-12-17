@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, ScrollView, Text, StyleSheet, FlatList, Image, Alert, TouchableOpacity} from 'react-native';
+import {View, ScrollView, Text, StyleSheet, FlatList, Image, TouchableOpacity} from 'react-native';
 import {router} from "expo-router";
-import handleDeleteDefect from "./Crud/DeleteDefect";
 import FetchDefect from "./Crud/FetchDefect";
 
 export default function DefectsScreen() {
@@ -35,21 +34,6 @@ export default function DefectsScreen() {
                         })
                     }>
                     <Text style={styles.editButtonText}>Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={() =>
-                        Alert.alert(
-                            "Confirm Delete",
-                            "Are you sure you want to delete this defect?",
-                            [
-                                {text: "Cancel", style: "cancel"},
-                                {text: "Delete", onPress: () => handleDeleteDefect(item.id)}
-                            ]
-                        )
-                    }
-                >
-                    <Text style={styles.deleteButtonText}>Delete</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -139,25 +123,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     editButton: {
-        backgroundColor: '#007BFF',
-        paddingVertical: 8,
-        borderRadius: 8,
-        marginTop: 8,
-        alignItems: 'center',
-    },
-    editButtonText: {
-        color: '#FFFFFF',
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
-    deleteButton: {
         backgroundColor: '#FF4136',
         paddingVertical: 8,
         borderRadius: 8,
         marginTop: 8,
         alignItems: 'center',
     },
-    deleteButtonText: {
+    editButtonText: {
         color: '#FFFFFF',
         fontSize: 14,
         fontWeight: 'bold',

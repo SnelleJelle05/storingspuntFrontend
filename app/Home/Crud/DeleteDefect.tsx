@@ -1,19 +1,18 @@
-import { Alert } from "react-native";
-
-const handleDeleteDefect = (id: any) => {
-    fetch(`https://storingspunt-d02668d953a7.herokuapp.com/api/defects/${id}`, {
-        method: 'DELETE',
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Failed to delete defect');
-            }
-            Alert.alert('Success', 'Defect deleted successfully.');
-        })
-        .catch((error) => {
-            console.error('Error deleting defect:', error);
-            Alert.alert('Error', 'Failed to delete defect.');
+export const handleDeleteDefect = async (id: number) => {
+    try {
+        const response = await fetch(`https://storingspunt-d02668d953a7.herokuapp.com/api/defects/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/merge-patch+json',
+            },
         });
-}
 
-export default handleDeleteDefect;
+        if (!response.ok) {
+            throw new Error(`Failed to delete defect with id ${id}`);
+        }
+        return true;
+    } catch (error) {
+        console.error('Error deleting defect:', error);
+        return false; // Return failure flag
+    }
+};
