@@ -20,6 +20,7 @@ export default function EditDefect() {
     // Refactor handleSave to be synchronous within the UI
     const handleSave = () => {
         const updateData = {title, description, location, category};
+        //sends the data to can repriew the data.
         (async () => {
             const success = await patchDefect(defectObj.id, updateData);
             if (success) {
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#007BFF',
         paddingVertical: 8,
         borderRadius: 8,
-        marginTop: 8,
+        marginTop: 25,
         alignItems: 'center',
     },
     deleteButtonText: {
